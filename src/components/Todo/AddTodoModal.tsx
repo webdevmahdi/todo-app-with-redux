@@ -10,16 +10,28 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { addTodo } from "@/redux/features/todoSlice";
+import { useAppDispatch } from "@/redux/hook";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { FormEvent, useState } from "react";
 
 function AddTodoModal() {
   const [task, setTask] = useState("");
   const [description, setDescription] = useState("");
+  const dispatch = useAppDispatch();
+
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
-    console.log({ task, description });
+    const id = Math.random().toString(36).substring(2, 7);
+    const taskDetails = {
+      id,
+      title: task,
+      description: description,
+    };
+    console.log(taskDetails)
+    dispatch(addTodo(taskDetails));
   };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -27,8 +39,8 @@ function AddTodoModal() {
           Add Todo
         </Button>
       </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
-      <form onSubmit={onSubmit}>
+      <DialogContent className="sm:max-w-[425px]">
+        <form onSubmit={onSubmit}>
           <DialogHeader>
             <DialogTitle>Add Task</DialogTitle>
             <DialogDescription>
@@ -59,12 +71,11 @@ function AddTodoModal() {
           </div>
           <DialogFooter>
             <DialogClose asChild>
-
-            <Button type="submit">Save changes</Button>
+              <Button type="submit">Add task</Button>
             </DialogClose>
           </DialogFooter>
-      </form>
-        </DialogContent>
+        </form>
+      </DialogContent>
     </Dialog>
   );
 }
